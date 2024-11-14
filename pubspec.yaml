@@ -36,10 +36,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   get: ^4.6.6
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -79,7 +81,15 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+      - family: MontserrattAlternates
+        fonts:
+          - asset: assets/fonts/MontserratAlternates-Bold.ttf
+          - asset: assets/fonts/MontserratAlternates-Medium.ttf
+          - asset: assets/fonts/MontserratAlternates-Regular.ttf
+            style: normal
+          - asset: assets/fonts/MontserratAlternates-Thin.ttf
+          - asset: assets/fonts/MontserratAlternates-SemiBold.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

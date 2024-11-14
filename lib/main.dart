@@ -10,8 +10,7 @@ void main() {
       GetMaterialApp(
         theme: app_theme,
         initialRoute: '/',
-        getPages: [], //pages,
-        home: MainPage(),
+        getPages: pages,
       )
   );
 }
