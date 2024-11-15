@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:po_karmanu_project/pages/auth/registration.dart';
 import 'package:po_karmanu_project/pages/onboarding/onboarding_page.dart';
 
 class MainPage extends StatelessWidget {
@@ -8,6 +9,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     // Условия (какую страницу показывать)
-    return OnboardingPage();
+    // return OnboardingPage();
+    return RegistrationPage();
   }
 }

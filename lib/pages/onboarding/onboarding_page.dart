@@ -22,7 +22,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     Color currentButtonColor = currentIndex == 0 ? Color(0xff01D1B19) : Colors.transparent;
-
+    String currentText = currentIndex == 0 ? 'Начать' : (currentIndex == 2 ? "Регистрация" : "Далее");
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -62,7 +62,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     )
                   ),
                   label: Text(
-                      currentIndex == 0 ? 'Начать' : 'Далее',
+                      currentText,
                       style: TextStyle(
                           color: currentIndex == 0 ? Colors.white : Color(0xff01D1B19),
                       )

@@ -58,8 +58,8 @@ class _OnboardingTwoState extends State<OnboardingTwo> with SingleTickerProvider
                     child: Image.asset(
                       'assets/img/onboarding/Image2.png',
                       fit: BoxFit.cover,
-                      width: 500,
-                      height: 500,
+                      width: 450,
+                      height: 450,
                     )
                 ),
               )

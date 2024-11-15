@@ -14,6 +14,12 @@ final app_theme = ThemeData(
             fontFamily: 'MontserrattAlternates',
             color: Color(0xff01D1B19),
             fontSize: 16
+        ),
+        displaySmall: TextStyle(
+          fontWeight: FontWeight.normal,
+          fontFamily: GoogleFonts.montserrat().fontFamily,
+          color: Color(0xff01D1B19),
+          fontSize: 16
         )
     ),
     textButtonTheme: TextButtonThemeData(
