@@ -15,13 +15,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
   int currentIndex = 0;
   Map<int, Widget> page = {
     0 : OnboardingOne(),
-    1 : OnboardingTwo(),
+    1 : const OnboardingTwo(),
     2 : OnboardingThree()
   };
 
   @override
   Widget build(BuildContext context) {
-    Color currentButtonColor = currentIndex == 0 ? Color(0xff01D1B19) : Colors.transparent;
+    Color currentButtonColor = currentIndex == 0 ? const Color(0xff01d1b19) : Colors.transparent;
     String currentText = currentIndex == 0 ? 'Начать' : (currentIndex == 2 ? "Регистрация" : "Далее");
     return Scaffold(
       backgroundColor: Colors.white,
@@ -31,40 +31,42 @@ class _OnboardingPageState extends State<OnboardingPage> {
         children: [
           Expanded(
               child: AnimatedContainer(
-                  duration: Duration(seconds: 1),
+                  duration: const Duration(seconds: 1),
                   child: page[currentIndex]!
               )
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 28),
+            margin: const EdgeInsets.symmetric(horizontal: 28),
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                   minWidth: double.infinity,
                   minHeight: 64
               ),
               child: TextButton.icon(
                   onPressed: () {
                     setState(() {
-                      if (currentIndex == 2)
+                      if (currentIndex == 2) {
                         currentIndex = 0;
-                      else currentIndex++;
+                      } else {
+                        currentIndex++;
+                      }
                     });
                   },
-                  icon: Icon(Icons.arrow_forward_outlined, size: 20, color: currentIndex == 0 ? Colors.white : Color(0xff01D1B19),),
+                  icon: Icon(Icons.arrow_forward_outlined, size: 20, color: currentIndex == 0 ? Colors.white : const Color(0xff01d1b19),),
                   iconAlignment: IconAlignment.end,
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(currentButtonColor),
                     side: WidgetStatePropertyAll(
                         BorderSide(
                             width: currentIndex == 0 ? 0 : 1.5,
-                            color: currentIndex == 0 ? Colors.transparent : Color(0xff01D1B19),
+                            color: currentIndex == 0 ? Colors.transparent : const Color(0xff01d1b19),
                         )
                     )
                   ),
                   label: Text(
                       currentText,
                       style: TextStyle(
-                          color: currentIndex == 0 ? Colors.white : Color(0xff01D1B19),
+                          color: currentIndex == 0 ? Colors.white : const Color(0xff01d1b19),
                       )
                   )
               ),

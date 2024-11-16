@@ -39,5 +39,5 @@ final app_theme = ThemeData(
           fontWeight: FontWeight.bold
         ))
       )
-    )
+    ),
 );

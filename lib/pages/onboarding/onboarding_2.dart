@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../models/onboarding_slider.dart';
-
 class OnboardingTwo extends StatefulWidget {
   const OnboardingTwo({super.key});
 
@@ -21,13 +19,13 @@ class _OnboardingTwoState extends State<OnboardingTwo> with SingleTickerProvider
       vsync: this
     );
     _offsetAnimation = Tween<Offset>(
-      begin: Offset(0.0, -0.1), // Начальная позиция
+      begin: const Offset(0.0, -0.1), // Начальная позиция
       end: Offset.zero, // Конечная позиция (на месте)
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutQuint),
     );
     _offsetTextAnimation = Tween<Offset>(
-      begin: Offset(0.0, 0.05), // Начальная позиция
+      begin: const Offset(0.0, 0.05), // Начальная позиция
       end: Offset.zero, // Конечная позиция (на месте)
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCirc),
@@ -52,7 +50,7 @@ class _OnboardingTwoState extends State<OnboardingTwo> with SingleTickerProvider
         Stack(
             children: [
               Transform.translate(
-                offset: Offset(0, -25),
+                offset: const Offset(0, -25),
                 child: SlideTransition(
                     position: _offsetAnimation,
                     child: Image.asset(
@@ -69,7 +67,7 @@ class _OnboardingTwoState extends State<OnboardingTwo> with SingleTickerProvider
         SlideTransition(
           position: _offsetTextAnimation,
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 28),
+            margin: const EdgeInsets.symmetric(horizontal: 28),
             child: Column(
               children: [
                 Column(
