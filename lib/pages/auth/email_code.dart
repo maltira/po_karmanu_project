@@ -324,7 +324,9 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                   minHeight: 64
                               ),
                               child: TextButton(
-                                  onPressed: (){},
+                                  onPressed: (){
+                                    Get.offNamed('/wait');
+                                  },
                                   style: TextButtonTheme.of(context).style,
                                   child: Text(
                                     'Войти',

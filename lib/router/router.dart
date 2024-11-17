@@ -4,12 +4,14 @@ import 'package:po_karmanu_project/pages/auth/authorization.dart';
 import 'package:po_karmanu_project/pages/auth/email_code.dart';
 import 'package:po_karmanu_project/pages/auth/registration.dart';
 import 'package:po_karmanu_project/pages/main/main_page.dart';
+import 'package:po_karmanu_project/waiting_page/wait_indicator.dart';
 
 class Routes {
   static String main = "/";
   static String auth = "/auth";
   static String reg = "/reg";
   static String code = "/code";
+  static String wait = "/wait";
 }
 
 final pages = [
@@ -37,5 +39,11 @@ final pages = [
       transition: Transition.downToUp,
       curve: Curves.easeOutCirc,
       transitionDuration: Duration(milliseconds: 350)
+  ),
+  GetPage(
+      name: Routes.wait,
+      page: () => WaitingIndicatorPage(),
+      transition: Transition.fadeIn,
+      transitionDuration: Duration(milliseconds: 50)
   )
 ];
