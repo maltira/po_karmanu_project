@@ -108,9 +108,7 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                       fontSize: 32,
                                     ),
                               ),
-                              const SizedBox(
-                                height: 8,
-                              ),
+                              const SizedBox(height: 8,),
                               Opacity(
                                 opacity: 0.6,
                                 child: Text(
@@ -120,9 +118,7 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                       Theme.of(context).textTheme.headlineSmall,
                                 ),
                               ),
-                              const SizedBox(
-                                height: 48,
-                              ),
+                              const SizedBox(height: 48,),
 
                               // ! Поля ввода
                               Container(

@@ -240,18 +240,15 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                           minHeight: 64),
                                       child: TextButton(
                                           onPressed: () {
-                                            _controller.duration =
-                                            const Duration(milliseconds: 300);
+                                            setState(() {
+                                              _controller.duration = const Duration(milliseconds: 300);
+                                            });
                                             _controller.reverse();
-                                            Future.delayed(
-                                                const Duration(milliseconds: 300),
+                                            Future.delayed(const Duration(milliseconds: 300),
                                                     () => Get.toNamed('/code',
-                                                    parameters: {
-                                                      'from': '/auth'
-                                                    }));
+                                                    parameters: {'from': '/auth'}));
                                           },
-                                          style:
-                                          TextButtonTheme.of(context).style,
+                                          style: TextButtonTheme.of(context).style,
                                           child: Text(
                                             'Войти',
                                             style: Theme.of(context).textTheme.headlineSmall!.copyWith(

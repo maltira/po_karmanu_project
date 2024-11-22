@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../database/supabase.dart';
 import '../../theme/theme.dart';
@@ -26,7 +27,7 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
   late Animation<Offset> _offsetTextAnimation;
   int seconds = 30;
   Timer? _timer;
-  String code = '';
+  List<String> code = ['0','0','0','0','0','0'];
   bool OTPvalid = false;
 
   void _startTimer() {
@@ -99,6 +100,7 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    print(code);
     return Scaffold(
       backgroundColor: ListOfColors.primaryWhite,
       body: Stack(
@@ -119,7 +121,8 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                         margin: const EdgeInsets.symmetric(horizontal: 28),
                         child: GestureDetector(
                           onTap: () {
-                            setState(() {
+                            setState(() async{
+                              Supabase.instance.client.auth.refreshSession();
                               _controller.duration = const Duration(milliseconds: 300);
                             });
                             _controller.reverse();
@@ -187,16 +190,23 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                           if (value.length == 1) {
                                             FocusScope.of(context).nextFocus();
                                             setState(() {
-                                              code += value;
+                                              code[0] = value;
                                             });
                                           }
-                                          else FocusScope.of(context).previousFocus();
+                                          else {
+                                            FocusScope.of(context).previousFocus();
+                                            code[0] = '0';
+                                          };
                                         },
                                         focusNode: _focusNodes[0],
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
+                                          hintText: code[0],
+                                          hintStyle: TextStyle(
+                                              color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                          ),
                                           focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
@@ -224,16 +234,23 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                           if (value.length == 1) {
                                             FocusScope.of(context).nextFocus();
                                             setState(() {
-                                              code += value;
+                                              code[1] = value;
                                             });
                                           }
-                                          else FocusScope.of(context).previousFocus();
+                                          else {
+                                            FocusScope.of(context).previousFocus();
+                                            code[1] = '0';
+                                          };
                                         },
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
                                         focusNode: _focusNodes[1],
                                         decoration: InputDecoration(
                                             border: InputBorder.none,
+                                            hintText: code[1],
+                                            hintStyle: TextStyle(
+                                                color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                            ),
                                             focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
@@ -261,16 +278,23 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                           if (value.length == 1) {
                                             FocusScope.of(context).nextFocus();
                                             setState(() {
-                                              code += value;
+                                              code[2] = value;
                                             });
                                           }
-                                          else FocusScope.of(context).previousFocus();
+                                          else {
+                                            FocusScope.of(context).previousFocus();
+                                            code[2] = '0';
+                                          };
                                         },
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
                                         focusNode: _focusNodes[2],
                                         decoration: InputDecoration(
                                             border: InputBorder.none,
+                                            hintText: code[2],
+                                            hintStyle: TextStyle(
+                                                color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                            ),
                                             focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
@@ -298,16 +322,23 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                           if (value.length == 1) {
                                             FocusScope.of(context).nextFocus();
                                             setState(() {
-                                              code += value;
+                                              code[3] = value;
                                             });
                                           }
-                                          else FocusScope.of(context).previousFocus();
+                                          else {
+                                            FocusScope.of(context).previousFocus();
+                                            code[3] = '0';
+                                          };
                                         },
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
                                         focusNode: _focusNodes[3],
                                         decoration: InputDecoration(
                                             border: InputBorder.none,
+                                            hintText: code[3],
+                                            hintStyle: TextStyle(
+                                                color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                            ),
                                             focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
@@ -335,16 +366,23 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                           if (value.length == 1) {
                                             FocusScope.of(context).nextFocus();
                                             setState(() {
-                                              code += value;
+                                              code[4] = value;
                                             });
                                           }
-                                          else FocusScope.of(context).previousFocus();
+                                          else {
+                                            FocusScope.of(context).previousFocus();
+                                            code[4] = '0';
+                                          };
                                         },
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
                                         focusNode: _focusNodes[4],
                                         decoration: InputDecoration(
                                             border: InputBorder.none,
+                                            hintText: code[4],
+                                            hintStyle: TextStyle(
+                                                color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                            ),
                                             focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
@@ -371,15 +409,14 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                         onChanged: (value)async{
                                           if (value.length == 1) {
                                             setState(() {
-                                              code += value;
+                                              code[5] = value;
                                             });
+                                            String fullCode = code[0]+code[1]+code[2]+code[3]+code[4]+code[5];
                                             if (code.length == 6) {
-                                              OTPvalid = await ConfirmOtpCode(parameters['email']!, code);
+                                              OTPvalid = await ConfirmOtpCode(parameters['email']!, fullCode);
                                               if (parameters['from'] != '/auth' && OTPvalid) {
                                                 setState(() {
-                                                  _controller.duration =
-                                                  const Duration(
-                                                      milliseconds: 300);
+                                                  _controller.duration = const Duration(milliseconds: 300);
                                                 });
                                                 _controller.reverse();
                                                 Future.delayed(
@@ -410,6 +447,10 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                         focusNode: _focusNodes[5],
                                         decoration: InputDecoration(
                                             border: InputBorder.none,
+                                            hintText: code[5],
+                                            hintStyle: TextStyle(
+                                              color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                            ),
                                             focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
@@ -486,11 +527,17 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                           ),
                           const SizedBox(width: 6,),
                           GestureDetector(
-                            onTap: (){
-                              if (seconds == 0) setState(() {
-                                seconds = 30;
+                            onTap: ()async {
+                              await supabase.auth.resend(
+                                type: OtpType.signup,
+                                email: parameters['email']!,
+                              );
+                              if (seconds == 0) {
+                                setState(() {
+                                  seconds = 30;
+                                });
                                 _startTimer();
-                              });
+                              }
                             },
                             child: Text(
                               seconds == 0 ? 'Отправить' : '${seconds}с',
