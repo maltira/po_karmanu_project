@@ -4,6 +4,8 @@ import 'package:po_karmanu_project/pages/onboarding/onboarding_1.dart';
 import 'package:po_karmanu_project/pages/onboarding/onboarding_2.dart';
 import 'package:po_karmanu_project/pages/onboarding/onboarding_3.dart';
 
+import '../../theme/theme.dart';
+
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
 
@@ -21,10 +23,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    Color currentButtonColor = currentIndex == 0 ? const Color(0xff01d1b19) : Colors.transparent;
+    Color currentButtonColor = currentIndex == 0 ? ListOfColors.primaryBlack : Colors.transparent;
     String currentText = currentIndex == 0 ? 'Начать' : (currentIndex == 2 ? "Регистрация" : "Далее");
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ListOfColors.primaryWhite,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -52,21 +54,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       }
                     });
                   },
-                  icon: Icon(Icons.arrow_forward_outlined, size: 20, color: currentIndex == 0 ? Colors.white : const Color(0xff01d1b19),),
+                  icon: Icon(Icons.arrow_forward_outlined, size: 20, color: currentIndex == 0 ? ListOfColors.primaryWhite : ListOfColors.primaryBlack,),
                   iconAlignment: IconAlignment.end,
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(currentButtonColor),
                     side: WidgetStatePropertyAll(
                         BorderSide(
                             width: currentIndex == 0 ? 0 : 1.5,
-                            color: currentIndex == 0 ? Colors.transparent : const Color(0xff01d1b19),
+                            color: currentIndex == 0 ? Colors.transparent : ListOfColors.primaryBlack,
                         )
                     )
                   ),
                   label: Text(
                       currentText,
                       style: TextStyle(
-                          color: currentIndex == 0 ? Colors.white : const Color(0xff01d1b19),
+                          color: currentIndex == 0 ? ListOfColors.primaryWhite : ListOfColors.primaryBlack,
                       )
                   )
               ),

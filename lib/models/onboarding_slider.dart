@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/theme.dart';
+
 class SliderPage extends StatefulWidget {
   const SliderPage({super.key, required this.currIndex});
 
@@ -23,7 +25,7 @@ class _SliderPageState extends State<SliderPage> {
           height: 8,
           width: currentIndex == 0 ? 14 : 8,
           decoration: BoxDecoration(
-            color: currentIndex == 0 ? Color(0xff1D1B19) : Color(0xff1D1B19).withOpacity(0.2),
+            color: currentIndex == 0 ? ListOfColors.primaryBlack : ListOfColors.primaryBlack.withOpacity(0.2),
             borderRadius: BorderRadius.circular(12)
           ),
         ),
@@ -33,7 +35,7 @@ class _SliderPageState extends State<SliderPage> {
           height: 8,
           width: currentIndex == 1 ? 14 : 8,
           decoration: BoxDecoration(
-              color: currentIndex == 1 ? Color(0xff1D1B19) : Color(0xff1D1B19).withOpacity(0.2),
+              color: currentIndex == 1 ? ListOfColors.primaryBlack : ListOfColors.primaryBlack.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12)
           ),
         ),
@@ -43,7 +45,7 @@ class _SliderPageState extends State<SliderPage> {
           height: 8,
           width: currentIndex == 2 ? 14 : 8,
           decoration: BoxDecoration(
-              color: currentIndex == 2 ? Color(0xff1D1B19) : Color(0xff1D1B19).withOpacity(0.2),
+              color: currentIndex == 2 ? ListOfColors.primaryBlack : ListOfColors.primaryBlack.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12)
           ),
         )

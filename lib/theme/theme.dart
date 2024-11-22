@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+abstract class ListOfColors {
+  static Color primaryBlack = Color(0xff01D1B19);
+  static Color primaryWhite = Colors.white;
+  static Color primaryGreen = Color(0xff669D4F);
+}
+
+
 final app_theme = ThemeData(
     fontFamily: 'GoogleFonts.montserrat().fontFamily',
     textTheme: TextTheme(
@@ -24,20 +31,14 @@ final app_theme = ThemeData(
     ),
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
-        foregroundColor: const WidgetStatePropertyAll(Colors.white),
-        backgroundColor: const WidgetStatePropertyAll(Color(0xff01D1B19)),
+        foregroundColor: WidgetStatePropertyAll(ListOfColors.primaryWhite),
+        backgroundColor: WidgetStatePropertyAll(ListOfColors.primaryBlack),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
 
           )
         ),
-        textStyle: WidgetStatePropertyAll(TextStyle(
-          fontFamily: GoogleFonts.montserratAlternates().fontFamily,
-          fontSize: 16,
-          letterSpacing: 1,
-          fontWeight: FontWeight.bold
-        ))
       )
     ),
 );

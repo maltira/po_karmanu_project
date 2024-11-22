@@ -1,24 +1,33 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
+import 'package:po_karmanu_project/database/supabase.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../theme/theme.dart';
 
-class AuthorizationPage extends StatefulWidget {
-  const AuthorizationPage({super.key});
+class RegistrationPagePassword extends StatefulWidget {
+  const RegistrationPagePassword({super.key});
 
   @override
-  State<AuthorizationPage> createState() => _AuthorizationPageState();
+  State<RegistrationPagePassword> createState() => _RegistrationPagePasswordState();
 }
 
-class _AuthorizationPageState extends State<AuthorizationPage> with SingleTickerProviderStateMixin {
+class _RegistrationPagePasswordState extends State<RegistrationPagePassword> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _passwordControllerRepeat = TextEditingController();
+  var _errorMessages = {'type': "", 'desc': ""};
   late Animation<Offset> _offsetAnimationFirstImage;
   late Animation<Offset> _offsetAnimationSecondImage;
   late Animation<Offset> _offsetTextAnimation;
+  var parameters = Get.parameters;
   final List<FocusNode> _focusNodes = [];
   final List<Color> _colors = [];
-
+  bool _passHide = true;
 
   @override
   void initState() {
@@ -39,6 +48,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
         });
       });
     }
+
     _controller = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     _offsetAnimationFirstImage = Tween<Offset>(
@@ -54,7 +64,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCirc),
     );
     _offsetTextAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 5), // Начальная позиция
+      begin: const Offset(0.0, -5), // Начальная позиция
       end: Offset.zero, // Конечная позиция (на месте)
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCirc),
@@ -63,59 +73,94 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
     super.initState();
   }
 
+  bool _isCorrectPassword(){
+    bool firstCond = _passwordController.text.length < 8 || _passwordControllerRepeat.text.length < 8;
+    bool secondCond = _passwordControllerRepeat.text.trim() != _passwordController.text.trim();
+    if (firstCond) {
+      setState(() {
+        _errorMessages['type'] = "Слишком короткий пароль!";
+        _errorMessages['desc'] = "Пароль должен содержать минимум 8 символов";
+      });
+      return false;
+    }
+    else if (secondCond) {
+      setState(() {
+        _errorMessages['type'] = "Пароли не совпадают!";
+        _errorMessages['desc'] = "Проверьте правильность введённых паролей";
+      });
+      return false;
+    }
+    return true;
+  }
+
   @override
   void dispose() {
     _controller.dispose();
+    _passwordController.dispose();
+    _passwordControllerRepeat.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    print(parameters['from']);
     return Scaffold(
       backgroundColor: ListOfColors.primaryWhite,
       body: Stack(
+        fit: StackFit.expand,
         children: [
           Indexer(
             children: [
               Align(
                 alignment: Alignment.bottomCenter,
-                child: SingleChildScrollView(
-                  child: Indexed(
-                    index: 1,
+                child: Indexed(
+                  index: 1,
+                  child: SingleChildScrollView(
                     child: SlideTransition(
                       position: _offsetTextAnimation,
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 48),
+                        padding: EdgeInsets.only(top: 90, bottom: 48),
                         child: IntrinsicHeight(
                           child: Column(
                             children: [
+                              // Назад
+                              Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 28),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _controller.duration = const Duration(milliseconds: 300);
+                                      });
+                                      _controller.reverse();
+                                      Future.delayed(const Duration(milliseconds: 300), () => Get.offAndToNamed(parameters['from']!));
+                                    },
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.arrow_back_ios_new),
+                                        const SizedBox(width: 12,),
+                                        Text(
+                                          'Назад',
+                                          style: Theme.of(context).textTheme.displaySmall,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                              ),
+                              const SizedBox(height: 64,),
                               // ! Заголовок
                               Text(
-                                'Авторизация',
+                                'Последний шаг',
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineLarge!
-                                    .copyWith(
-                                      fontSize: 32,
-                                    ),
+                                style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 32),
                               ),
                               const SizedBox(height: 8,),
-                              ConstrainedBox(
-                                constraints: BoxConstraints(minHeight: 42),
-                                child: Opacity(
-                                  opacity: 0.6,
-                                  child: SizedBox(
-                                    width: 240,
-                                    child: Text(
-                                      'Войти в существующий аккаунт',
-                                      textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineSmall,
-                                    ),
-                                  ),
+                              Opacity(
+                                opacity: 0.6,
+                                child: Text(
+                                  'Укажите надёжный пароль',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headlineSmall,
                                 ),
                               ),
                               const SizedBox(height: 48,),
@@ -126,7 +171,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    // ! Email
+                                    // Пароль
                                     AnimatedContainer(
                                       duration: Duration(milliseconds: 300),
                                       width: double.infinity,
@@ -140,39 +185,12 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                           onEditingComplete: (){
                                             FocusScope.of(context).nextFocus();
                                           },
-                                          focusNode: _focusNodes[0],
-                                          decoration: InputDecoration(
-                                              icon: Icon(Icons.email_outlined, color: _colors[0]),
-                                              hintText: 'Укажите почту',
-                                              border: InputBorder.none,
-                                              hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                                      color: ListOfColors.primaryBlack.withOpacity(0.25))),
-                                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                              fontSize: 18,
-                                              decorationThickness: 0
-                                          ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 15,),
-
-                                    // ! Пароль
-                                    AnimatedContainer(
-                                      duration: Duration(milliseconds: 300),
-                                      width: double.infinity,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 33, vertical: 5),
-                                      decoration: BoxDecoration(
-                                          color: ListOfColors.primaryWhite,
-                                          borderRadius: BorderRadius.circular(16),
-                                          border: Border.all(width: 1.5, color: _colors[1])),
-                                      child: TextField(
-                                          onEditingComplete: (){
-                                            FocusScope.of(context).nextFocus();
-                                          },
                                           obscureText: true,
-                                          focusNode: _focusNodes[1],
+                                          focusNode: _focusNodes[0],
+                                          controller: _passwordController,
                                           decoration: InputDecoration(
-                                              icon: Icon(Icons.lock_open_outlined, color: _colors[1]),
+                                              icon: Icon(Icons.lock_open_outlined,
+                                                  color: _colors[0]),
                                               hintText: 'Укажите пароль',
                                               border: InputBorder.none,
                                               hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(color: ListOfColors.primaryBlack.withOpacity(0.25))),
@@ -184,53 +202,44 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                     ),
                                     const SizedBox(height: 15,),
 
-                                    // ! Забыли пароль?
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {},
-                                          child: Opacity(
-                                            opacity: 0.7,
-                                            child: Text(
-                                              'Забыли пароль?',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .displaySmall,
-                                            ),
+                                    // Повторить пароль
+                                    AnimatedContainer(
+                                      duration: Duration(milliseconds: 300),
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 33, vertical: 5),
+                                      decoration: BoxDecoration(
+                                          color: ListOfColors.primaryWhite,
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(width: 1.5,color: _colors[1])
+                                      ),
+                                      child: TextField(
+                                          onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                                          controller: _passwordControllerRepeat,
+                                          focusNode: _focusNodes[1],
+                                          obscureText: _passHide,
+                                          decoration: InputDecoration(
+                                              icon: Icon(Icons.lock_open_outlined, color: _colors[1]),
+                                              hintText: 'Повторите пароль',
+                                              border: InputBorder.none,
+                                              hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                                  color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                              )
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 48,),
-
-                                    // ! Соц сети
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Image.asset(
-                                          'assets/img/auth/google.png',
-                                          width: 78,
-                                          height: 78,
-                                        ),
-                                        const SizedBox(
-                                          width: 24,
-                                        ),
-                                        Image.asset(
-                                          'assets/img/auth/vk.png',
-                                          width: 78,
-                                          height: 78,
-                                        ),
-                                      ],
+                                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                              fontSize: 18,
+                                              decorationThickness: 0
+                                          ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 96,),
 
-                              // !  Войти
+                              const SizedBox(height: 144,),
+                              // ! Войти
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 28),
+                                margin: const EdgeInsets.symmetric(horizontal: 28),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -239,21 +248,26 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                           minWidth: double.infinity,
                                           minHeight: 64),
                                       child: TextButton(
-                                          onPressed: () {
-                                            _controller.duration =
-                                            const Duration(milliseconds: 300);
-                                            _controller.reverse();
-                                            Future.delayed(
-                                                const Duration(milliseconds: 300),
-                                                    () => Get.toNamed('/code',
-                                                    parameters: {
-                                                      'from': '/auth'
-                                                    }));
+                                          onPressed: () async{
+                                            if (_isCorrectPassword()) {
+                                              final UserResponse res = await supabase.auth.updateUser(
+                                                UserAttributes(
+                                                    password: _passwordController.text
+                                                )
+                                              );
+                                            }
+                                            else {
+                                              InAppNotifications.show(
+                                                  title: _errorMessages['type'],
+                                                  duration: Duration(seconds: 5),
+                                                  leading: Icon(Icons.error_outline, size: 32, color: Colors.red,),
+                                                  description: _errorMessages['desc']
+                                              );
+                                            }
                                           },
-                                          style:
-                                          TextButtonTheme.of(context).style,
+                                          style: TextButtonTheme.of(context).style,
                                           child: Text(
-                                            'Войти',
+                                            'Регистрация',
                                             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                               fontWeight: FontWeight.w600,
                                               color: ListOfColors.primaryWhite,
@@ -266,20 +280,17 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                       constraints: const BoxConstraints(minWidth: double.infinity, minHeight: 64),
                                       child: TextButton(
                                           onPressed: () {
-                                            setState(() {
-                                              _controller.duration = const Duration(milliseconds: 300);
-                                              _controller.reverse();
-                                              Future.delayed(
-                                                  const Duration(milliseconds: 300),
-                                                      () => Get.offAndToNamed('/reg'));
-                                            });
+                                            setState(() => _controller.duration = const Duration(milliseconds: 300));
+                                            _controller.reverse();
+                                            Future.delayed(const Duration(milliseconds: 300),
+                                                    () => Get.offAndToNamed(parameters['from']!));
                                           },
                                           style: ButtonStyle(
                                             backgroundColor: WidgetStatePropertyAll(ListOfColors.primaryWhite),
                                             side: WidgetStatePropertyAll(BorderSide(width: 1.5, color: ListOfColors.primaryBlack)),
                                           ),
                                           child: Text(
-                                            'Создать аккаунт',
+                                            'Вернуться',
                                             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                               fontWeight: FontWeight.w600,
                                               letterSpacing: 0.5,
@@ -288,7 +299,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                     ),
                                   ],
                                 ),
-                              ),
+                              )
                             ],
                           ),
                         ),
@@ -298,7 +309,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                 ),
               ),
 
-              // ! Фотки на фоне
+              // Фотки на фоне
               Indexed(
                 index: 0,
                 child: Opacity(
@@ -308,9 +319,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                       SlideTransition(
                         position: _offsetAnimationFirstImage,
                         child: Transform.translate(
-                          offset: const Offset(400, 450),
+                          offset: const Offset(50, 80),
                           child: Transform.rotate(
-                            angle: 1,
+                            angle: -3,
                             child: SizedBox(
                               width: 500,
                               height: 500,
@@ -325,7 +336,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                       SlideTransition(
                         position: _offsetAnimationSecondImage,
                         child: Transform.translate(
-                          offset: const Offset(-40, -120),
+                          offset: const Offset(-40, 240),
                           child: Transform.rotate(
                             angle: 0.35,
                             child: SizedBox(

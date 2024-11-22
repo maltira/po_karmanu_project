@@ -2,8 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
+
+import '../../database/supabase.dart';
+import '../../theme/theme.dart';
 
 class EmailCode extends StatefulWidget {
   const EmailCode({super.key});
@@ -13,8 +17,8 @@ class EmailCode extends StatefulWidget {
 }
 
 class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMixin{
-  List<FocusNode> _focusNodes = [];
-  List<Color> _colors = [];
+  final List<FocusNode> _focusNodes = [];
+  final List<Color> _colors = [];
   var parameters = Get.parameters;
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimationFirstImage;
@@ -23,6 +27,7 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
   int seconds = 30;
   Timer? _timer;
   String code = '';
+  bool OTPvalid = false;
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer){
@@ -38,18 +43,18 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
     _startTimer();
 
     // Фокус поля
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 6; i++) {
       _focusNodes.add(FocusNode());
-      _colors.add(const Color(0xff1D1B19).withOpacity(0.2)); // Начальный цвет
+      _colors.add(ListOfColors.primaryBlack.withOpacity(0.25)); // Начальный цвет
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 6; i++) {
       _focusNodes[i].addListener(() {
         setState(() {
           if (_focusNodes[i].hasFocus) {
             _colors[i] = const Color(0xff7489F3); // Цвет при фокусе
 
           } else {
-            _colors[i] = const Color(0xff1D1B19).withOpacity(0.2); // Цвет без фокуса
+            _colors[i] = ListOfColors.primaryBlack.withOpacity(0.25); // Цвет без фокуса
           }
         });
       });
@@ -60,19 +65,19 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
     );
     // Анимация загрузки экрана
     _offsetAnimationFirstImage = Tween<Offset>(
-      begin: const Offset(0.4, 0), // Начальная позиция
+      begin: const Offset(1, 0), // Начальная позиция
       end: Offset.zero, // Конечная позиция (на месте)
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCirc),
     );
     _offsetAnimationSecondImage = Tween<Offset>(
-      begin: const Offset(-0.4, 0), // Начальная позиция
+      begin: const Offset(-1, 0), // Начальная позиция
       end: Offset.zero, // Конечная позиция (на месте)
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCirc),
     );
     _offsetTextAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 1), // Начальная позиция
+      begin: const Offset(0.0, 5), // Начальная позиция
       end: Offset.zero, // Конечная позиция (на месте)
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCirc),
@@ -95,7 +100,7 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ListOfColors.primaryWhite,
       body: Stack(
         children: [
           Indexer(
@@ -114,9 +119,11 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                         margin: const EdgeInsets.symmetric(horizontal: 28),
                         child: GestureDetector(
                           onTap: () {
-                            _controller.duration = const Duration(milliseconds: 100);
+                            setState(() {
+                              _controller.duration = const Duration(milliseconds: 300);
+                            });
                             _controller.reverse();
-                            Future.delayed(const Duration(milliseconds: 100), () => Get.offAndToNamed('${parameters['from']}'));
+                            Future.delayed(const Duration(milliseconds: 300), () => Get.offAndToNamed(parameters['from']!));
                           },
                           child: Row(
                             children: [
@@ -146,7 +153,7 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                         child: SizedBox(
                           width: 300,
                           child: Text(
-                            'Укажите код, отправленный на почту example@gmail.com',
+                            'Укажите код, отправленный на почту ${parameters['email']}',
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
@@ -167,13 +174,13 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                   children: [
                                     AnimatedContainer(
                                       duration: const Duration(milliseconds: 300),
-                                      width: 72,
-                                      height: 72,
+                                      width: 52,
+                                      height: 52,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                        color: const Color(0xffFAFAFA),
+                                        color: ListOfColors.primaryBlack.withOpacity(0.03),
                                         borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(color: _colors[0])
+                                        border: Border.all(width: 1.5, color: _colors[0])
                                       ),
                                       child: TextFormField(
                                         onChanged: (value){
@@ -188,9 +195,9 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                         focusNode: _focusNodes[0],
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
-                                        decoration: const InputDecoration(
+                                        decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          focusColor: Colors.black
+                                          focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                           fontSize: 28,
@@ -204,13 +211,13 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                     ),
                                     AnimatedContainer(
                                       duration: const Duration(milliseconds: 300),
-                                      width: 72,
-                                      height: 72,
+                                      width: 52,
+                                      height: 52,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                          color: const Color(0xffFAFAFA),
+                                          color: ListOfColors.primaryBlack.withOpacity(0.03),
                                           borderRadius: BorderRadius.circular(16),
-                                          border: Border.all(color: _colors[1])
+                                          border: Border.all(width: 1.5, color: _colors[1])
                                       ),
                                       child: TextFormField(
                                         onChanged: (value){
@@ -225,9 +232,9 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
                                         focusNode: _focusNodes[1],
-                                        decoration: const InputDecoration(
+                                        decoration: InputDecoration(
                                             border: InputBorder.none,
-                                            focusColor: Colors.black
+                                            focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                           fontSize: 28,
@@ -241,13 +248,13 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                     ),
                                     AnimatedContainer(
                                       duration: const Duration(milliseconds: 300),
-                                      width: 72,
-                                      height: 72,
+                                      width: 52,
+                                      height: 52,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                          color: const Color(0xffFAFAFA),
+                                          color: ListOfColors.primaryBlack.withOpacity(0.03),
                                           borderRadius: BorderRadius.circular(16),
-                                          border: Border.all(color: _colors[2])
+                                          border: Border.all(width: 1.5, color: _colors[2])
                                       ),
                                       child: TextFormField(
                                         onChanged: (value){
@@ -262,9 +269,9 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
                                         focusNode: _focusNodes[2],
-                                        decoration: const InputDecoration(
+                                        decoration: InputDecoration(
                                             border: InputBorder.none,
-                                            focusColor: Colors.black
+                                            focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                           fontSize: 28,
@@ -278,13 +285,13 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                     ),
                                     AnimatedContainer(
                                       duration: const Duration(milliseconds: 300),
-                                      width: 72,
-                                      height: 72,
+                                      width: 52,
+                                      height: 52,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                          color: const Color(0xffFAFAFA),
+                                          color: ListOfColors.primaryBlack.withOpacity(0.03),
                                           borderRadius: BorderRadius.circular(16),
-                                          border: Border.all(color: _colors[3])
+                                          border: Border.all(width: 1.5, color: _colors[3])
                                       ),
                                       child: TextFormField(
                                         onChanged: (value){
@@ -299,9 +306,111 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
                                         focusNode: _focusNodes[3],
-                                        decoration: const InputDecoration(
+                                        decoration: InputDecoration(
                                             border: InputBorder.none,
-                                            focusColor: Colors.black
+                                            focusColor: ListOfColors.primaryBlack
+                                        ),
+                                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(1),
+                                          FilteringTextInputFormatter.digitsOnly
+                                        ],
+                                      ),
+                                    ),
+                                    AnimatedContainer(
+                                      duration: const Duration(milliseconds: 300),
+                                      width: 52,
+                                      height: 52,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          color: ListOfColors.primaryBlack.withOpacity(0.03),
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(width: 1.5, color: _colors[4])
+                                      ),
+                                      child: TextFormField(
+                                        onChanged: (value){
+                                          if (value.length == 1) {
+                                            FocusScope.of(context).nextFocus();
+                                            setState(() {
+                                              code += value;
+                                            });
+                                          }
+                                          else FocusScope.of(context).previousFocus();
+                                        },
+                                        keyboardType: TextInputType.number,
+                                        textAlign: TextAlign.center,
+                                        focusNode: _focusNodes[4],
+                                        decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            focusColor: ListOfColors.primaryBlack
+                                        ),
+                                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(1),
+                                          FilteringTextInputFormatter.digitsOnly
+                                        ],
+                                      ),
+                                    ),
+                                    AnimatedContainer(
+                                      duration: const Duration(milliseconds: 300),
+                                      width: 52,
+                                      height: 52,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          color: ListOfColors.primaryBlack.withOpacity(0.03),
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(width: 1.5, color: _colors[5])
+                                      ),
+                                      child: TextFormField(
+                                        onChanged: (value)async{
+                                          if (value.length == 1) {
+                                            setState(() {
+                                              code += value;
+                                            });
+                                            if (code.length == 6) {
+                                              OTPvalid = await ConfirmOtpCode(parameters['email']!, code);
+                                              if (parameters['from'] != '/auth' && OTPvalid) {
+                                                setState(() {
+                                                  _controller.duration =
+                                                  const Duration(
+                                                      milliseconds: 300);
+                                                });
+                                                _controller.reverse();
+                                                Future.delayed(
+                                                    const Duration(
+                                                        milliseconds: 300),
+                                                        () =>
+                                                        Get.toNamed('/regpass',
+                                                            parameters: {
+                                                              'from': parameters['from']!,
+                                                              'name': parameters['name']!,
+                                                              'email': parameters['email']!
+                                                            }));
+                                              }
+                                              else InAppNotifications.show(
+                                                  title: "Неверный OTP код",
+                                                  duration: Duration(seconds: 5),
+                                                  leading: Icon(Icons.error_outline, size: 32, color: Colors.red,),
+                                                  description: "Убедитесь в правильности кода подтверждения и повторите попытку"
+                                              );
+                                              FocusScope.of(context).nextFocus();
+                                            }
+                                            FocusScope.of(context).previousFocus();
+                                          }
+                                          else FocusScope.of(context).previousFocus();
+                                        },
+                                        keyboardType: TextInputType.number,
+                                        textAlign: TextAlign.center,
+                                        focusNode: _focusNodes[5],
+                                        decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                           fontSize: 28,
@@ -325,13 +434,34 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                               ),
                               child: TextButton(
                                   onPressed: (){
-                                    Get.offNamed('/wait');
+                                    if (parameters['from'] != '/auth' && OTPvalid) {
+                                      setState(() {
+                                        _controller.duration =
+                                        const Duration(milliseconds: 300);
+                                      });
+                                      _controller.reverse();
+                                      Future.delayed(
+                                          const Duration(milliseconds: 300),
+                                              () =>
+                                              Get.toNamed('/regpass',
+                                                  parameters: {
+                                                    'from': parameters['from']!,
+                                                    'name': parameters['name']!,
+                                                    'email': parameters['email']!
+                                                  }));
+                                    }
+                                    else InAppNotifications.show(
+                                        title: "Неверный OTP код",
+                                        duration: Duration(seconds: 5),
+                                        leading: Icon(Icons.error_outline, size: 32, color: Colors.red,),
+                                        description: "Убедитесь в правильности кода подтверждения и повторите попытку"
+                                    );
                                   },
                                   style: TextButtonTheme.of(context).style,
                                   child: Text(
                                     'Войти',
                                     style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                        color: Colors.white,
+                                        color: ListOfColors.primaryWhite,
                                         fontWeight: FontWeight.w600
                                     ),
                                   )
@@ -365,7 +495,7 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                             child: Text(
                               seconds == 0 ? 'Отправить' : '${seconds}с',
                               style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  color: const Color(0xff669D4F),
+                                  color: ListOfColors.primaryGreen,
                                   fontWeight: FontWeight.w600
                               ),
                             ),
