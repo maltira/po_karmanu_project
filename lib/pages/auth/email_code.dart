@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
-import 'package:po_karmanu_project/waiting_page/wait_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../database/supabase.dart';
+import '../../models/waiting_page/wait_indicator.dart';
 import '../../theme/theme.dart';
 
 class EmailCode extends StatefulWidget {

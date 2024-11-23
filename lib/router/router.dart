@@ -4,8 +4,9 @@ import 'package:po_karmanu_project/pages/auth/authorization.dart';
 import 'package:po_karmanu_project/pages/auth/email_code.dart';
 import 'package:po_karmanu_project/pages/auth/registration_email.dart';
 import 'package:po_karmanu_project/pages/auth/registration_pass.dart';
-import 'package:po_karmanu_project/pages/content/noname.dart';
 import 'package:po_karmanu_project/pages/main/main_page.dart';
+
+import '../pages/content_page/noname.dart';
 class Routes {
   static String main = "/";
   static String auth = "/auth";
@@ -16,7 +17,10 @@ class Routes {
 }
 
 final pages = [
-  GetPage(name: Routes.main, page: () => MainPage()),
+  GetPage(
+      name: Routes.main,
+      page: () => MainPage(),
+  ),
   GetPage(
       name: Routes.auth,
       page: () => AuthorizationPage(),

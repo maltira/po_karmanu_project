@@ -12,6 +12,22 @@ Future SignUpOptResponse(String email, String password) async {
   return response;
 }
 
+Future CreateUser({required String uid, required String username, required String email, required String password, required String timeOfCreate}) async {
+  try {
+    await supabase.from('users').insert({
+      'id': uid,
+      'created_at': timeOfCreate,
+      'username': username,
+      'password': password,
+      'email': email
+    });
+    return true;
+  } catch (e){
+    print('ОШИБКАААА: $e');
+    return e;
+  }
+}
+
 Future SignInWithEmail(String email, String password) async{
   try {
     await supabase.auth.signInWithPassword(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:po_karmanu_project/pages/auth/registration_email.dart';
 
+import '../onboarding/onboarding_page.dart';
+
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
 
@@ -16,8 +18,11 @@ class MainPage extends StatelessWidget {
       ..shadow = false
       ..backgroundColor = Color(0xFFFFECEC);
 
-    // Условия (какую страницу показывать)
     // return OnboardingPage();
-    return RegistrationPage();
+    // в памяти сохраняем информацию о том, зарегистировался ли пользователь
+    // если да, то кидаем на страницу с контентом
+    // если нет, то на регистрацию
+    return OnboardingPage();
+    //return RegistrationPage();
   }
 }

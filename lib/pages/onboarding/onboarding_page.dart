@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:po_karmanu_project/models/onboarding_slider.dart';
 import 'package:po_karmanu_project/pages/onboarding/onboarding_1.dart';
 import 'package:po_karmanu_project/pages/onboarding/onboarding_2.dart';
@@ -48,7 +49,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   onPressed: () {
                     setState(() {
                       if (currentIndex == 2) {
-                        currentIndex = 0;
+                        // переход
+                        Get.offAllNamed('/reg');
                       } else {
                         currentIndex++;
                       }
@@ -67,8 +69,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                   label: Text(
                       currentText,
-                      style: TextStyle(
-                          color: currentIndex == 0 ? ListOfColors.primaryWhite : ListOfColors.primaryBlack,
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        color: currentIndex == 0 ? ListOfColors.primaryWhite : ListOfColors.primaryBlack,
+                        fontWeight: FontWeight.w600
                       )
                   )
               ),
