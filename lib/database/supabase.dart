@@ -8,7 +8,22 @@ Future SignUpOptResponse(String email, String password) async {
       email: email,
       password: password
   );
+  print(response);
   return response;
+}
+
+Future SignInWithEmail(String email, String password) async{
+  try {
+    await supabase.auth.signInWithPassword(
+      email: email,
+      password: password
+    );
+    print('Успешная авторизация, пользователь найден');
+    return true;
+  } catch (e){
+    print('Попытка авторизации неуспешна: $e');
+    return e;
+  }
 }
 
 Future ConfirmOtpCode(String email, String token) async{
@@ -22,4 +37,12 @@ Future ConfirmOtpCode(String email, String token) async{
   } catch(e) {
     return false;
   }
+}
+
+Future UpdatePassword(String newPass) async {
+  await supabase.auth.updateUser(
+      UserAttributes(
+          password: newPass
+      )
+  );
 }

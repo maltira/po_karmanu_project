@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
+import 'package:po_karmanu_project/waiting_page/wait_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../database/supabase.dart';
@@ -25,10 +26,10 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
   late Animation<Offset> _offsetAnimationFirstImage;
   late Animation<Offset> _offsetAnimationSecondImage;
   late Animation<Offset> _offsetTextAnimation;
-  int seconds = 30;
+  int seconds = 60;
   Timer? _timer;
   List<String> code = ['0','0','0','0','0','0'];
-  bool OTPvalid = false;
+  bool OTPvalid = false, _waiting = false;
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer){
@@ -38,6 +39,11 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
       });
     });
   }
+
+  Future<void> _checkCode(String code) async{
+    OTPvalid = await ConfirmOtpCode(parameters['email']!, code);
+  }
+
 
   @override
   void initState() {
@@ -88,6 +94,7 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
     super.initState();
   }
 
+
   @override
   void dispose() {
     _controller.dispose();
@@ -100,13 +107,15 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    print(code);
+
     return Scaffold(
       backgroundColor: ListOfColors.primaryWhite,
       body: Stack(
         children: [
           Indexer(
             children: [
+              if (_waiting)
+                Indexed(index: 2,child: WaitingIndicator()),
               Indexed(
                 index: 1,
                 child: SlideTransition(
@@ -120,9 +129,8 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 28),
                         child: GestureDetector(
-                          onTap: () {
-                            setState(() async{
-                              Supabase.instance.client.auth.refreshSession();
+                          onTap: () async{
+                            setState((){
                               _controller.duration = const Duration(milliseconds: 300);
                             });
                             _controller.reverse();
@@ -412,17 +420,22 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                               code[5] = value;
                                             });
                                             String fullCode = code[0]+code[1]+code[2]+code[3]+code[4]+code[5];
-                                            if (code.length == 6) {
-                                              OTPvalid = await ConfirmOtpCode(parameters['email']!, fullCode);
+                                            if (fullCode.length == 6) {
+                                              setState(() {
+                                                _waiting = true;
+                                              });
+                                              await _checkCode(fullCode).then((bool) {
+                                                setState(() {
+                                                  _waiting = false;
+                                                });
+                                              });
                                               if (parameters['from'] != '/auth' && OTPvalid) {
                                                 setState(() {
                                                   _controller.duration = const Duration(milliseconds: 300);
                                                 });
                                                 _controller.reverse();
                                                 Future.delayed(
-                                                    const Duration(
-                                                        milliseconds: 300),
-                                                        () =>
+                                                    const Duration(milliseconds: 300), () =>
                                                         Get.toNamed('/regpass',
                                                             parameters: {
                                                               'from': parameters['from']!,
@@ -477,15 +490,12 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                   onPressed: (){
                                     if (parameters['from'] != '/auth' && OTPvalid) {
                                       setState(() {
-                                        _controller.duration =
-                                        const Duration(milliseconds: 300);
+                                        _controller.duration = const Duration(milliseconds: 300);
                                       });
                                       _controller.reverse();
                                       Future.delayed(
                                           const Duration(milliseconds: 300),
-                                              () =>
-                                              Get.toNamed('/regpass',
-                                                  parameters: {
+                                              () => Get.toNamed('/regpass', parameters: {
                                                     'from': parameters['from']!,
                                                     'name': parameters['name']!,
                                                     'email': parameters['email']!
@@ -534,7 +544,7 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                               );
                               if (seconds == 0) {
                                 setState(() {
-                                  seconds = 30;
+                                  seconds = 60;
                                 });
                                 _startTimer();
                               }

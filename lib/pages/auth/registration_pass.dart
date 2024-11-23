@@ -1,13 +1,13 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
 import 'package:po_karmanu_project/database/supabase.dart';
+import 'package:po_karmanu_project/pages/content/noname.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../theme/theme.dart';
+import '../../waiting_page/wait_indicator.dart';
 
 class RegistrationPagePassword extends StatefulWidget {
   const RegistrationPagePassword({super.key});
@@ -16,18 +16,21 @@ class RegistrationPagePassword extends StatefulWidget {
   State<RegistrationPagePassword> createState() => _RegistrationPagePasswordState();
 }
 
+
+// Задача на 23.11 - удаление пользователя
+
+
 class _RegistrationPagePasswordState extends State<RegistrationPagePassword> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _passwordControllerRepeat = TextEditingController();
+  TextEditingController _passwordController = TextEditingController(), _passwordControllerRepeat = TextEditingController();
   var _errorMessages = {'type': "", 'desc': ""};
-  late Animation<Offset> _offsetAnimationFirstImage;
-  late Animation<Offset> _offsetAnimationSecondImage;
-  late Animation<Offset> _offsetTextAnimation;
+  late Animation<Offset> _offsetAnimationFirstImage, _offsetAnimationSecondImage, _offsetTextAnimation;
   var parameters = Get.parameters;
   final List<FocusNode> _focusNodes = [];
   final List<Color> _colors = [];
   bool _passHide = true;
+  final userId = Supabase.instance.client.auth.currentUser!.id;
+  bool _waiting = false;
 
   @override
   void initState() {
@@ -103,7 +106,6 @@ class _RegistrationPagePasswordState extends State<RegistrationPagePassword> wit
 
   @override
   Widget build(BuildContext context) {
-    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
     print(parameters['from']);
     return Scaffold(
       backgroundColor: ListOfColors.primaryWhite,
@@ -112,6 +114,9 @@ class _RegistrationPagePasswordState extends State<RegistrationPagePassword> wit
         children: [
           Indexer(
             children: [
+              if (_waiting)
+                Indexed(index: 2, child: WaitingIndicator()),
+
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Indexed(
@@ -120,34 +125,10 @@ class _RegistrationPagePasswordState extends State<RegistrationPagePassword> wit
                     child: SlideTransition(
                       position: _offsetTextAnimation,
                       child: Padding(
-                        padding: EdgeInsets.only(top: 90, bottom: 48),
+                        padding: EdgeInsets.only(bottom: 48),
                         child: IntrinsicHeight(
                           child: Column(
                             children: [
-                              // Назад
-                              Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 28),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _controller.duration = const Duration(milliseconds: 300);
-                                      });
-                                      _controller.reverse();
-                                      Future.delayed(const Duration(milliseconds: 300), () => Get.offAndToNamed(parameters['from']!));
-                                    },
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.arrow_back_ios_new),
-                                        const SizedBox(width: 12,),
-                                        Text(
-                                          'Назад',
-                                          style: Theme.of(context).textTheme.displaySmall,
-                                        )
-                                      ],
-                                    ),
-                                  )
-                              ),
-                              const SizedBox(height: 64,),
                               // ! Заголовок
                               Text(
                                 'Последний шаг',
@@ -236,68 +217,44 @@ class _RegistrationPagePasswordState extends State<RegistrationPagePassword> wit
                                 ),
                               ),
 
-                              const SizedBox(height: 144,),
+                              const SizedBox(height: 200,),
                               // ! Войти
                               Container(
                                 margin: const EdgeInsets.symmetric(horizontal: 28),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                          minWidth: double.infinity,
-                                          minHeight: 64),
-                                      child: TextButton(
-                                          onPressed: () async{
-                                            if (_isCorrectPassword()) {
-                                              final UserResponse res = await supabase.auth.updateUser(
-                                                UserAttributes(
-                                                    password: _passwordController.text
-                                                )
-                                              );
-                                            }
-                                            else {
-                                              InAppNotifications.show(
-                                                  title: _errorMessages['type'],
-                                                  duration: Duration(seconds: 5),
-                                                  leading: Icon(Icons.error_outline, size: 32, color: Colors.red,),
-                                                  description: _errorMessages['desc']
-                                              );
-                                            }
-                                          },
-                                          style: TextButtonTheme.of(context).style,
-                                          child: Text(
-                                            'Регистрация',
-                                            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color: ListOfColors.primaryWhite,
-                                              letterSpacing: 0.5,
-                                            ),
-                                          )),
-                                    ),
-                                    const SizedBox(height: 12,),
-                                    ConstrainedBox(
-                                      constraints: const BoxConstraints(minWidth: double.infinity, minHeight: 64),
-                                      child: TextButton(
-                                          onPressed: () {
-                                            setState(() => _controller.duration = const Duration(milliseconds: 300));
-                                            _controller.reverse();
-                                            Future.delayed(const Duration(milliseconds: 300),
-                                                    () => Get.offAndToNamed(parameters['from']!));
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor: WidgetStatePropertyAll(ListOfColors.primaryWhite),
-                                            side: WidgetStatePropertyAll(BorderSide(width: 1.5, color: ListOfColors.primaryBlack)),
-                                          ),
-                                          child: Text(
-                                            'Вернуться',
-                                            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 0.5,
-                                            ),
-                                          )),
-                                    ),
-                                  ],
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                      minWidth: double.infinity,
+                                      minHeight: 64),
+                                  child: TextButton(
+                                      onPressed: () async{
+                                        setState(() {
+                                          _waiting = true;
+                                        });
+                                        if (_isCorrectPassword()) {
+                                          await UpdatePassword(_passwordController.text.trim());
+                                          setState(() {
+                                            _waiting = false;
+                                          });
+                                          Get.toNamed('/noname', parameters: {'name': parameters['name']!});
+                                        }
+                                        else {
+                                          InAppNotifications.show(
+                                              title: _errorMessages['type'],
+                                              duration: Duration(seconds: 5),
+                                              leading: Icon(Icons.error_outline, size: 32, color: Colors.red,),
+                                              description: _errorMessages['desc']
+                                          );
+                                        }
+                                      },
+                                      style: TextButtonTheme.of(context).style,
+                                      child: Text(
+                                        'Регистрация',
+                                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: ListOfColors.primaryWhite,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      )),
                                 ),
                               )
                             ],

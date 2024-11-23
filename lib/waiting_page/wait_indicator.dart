@@ -1,21 +1,25 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:po_karmanu_project/theme/theme.dart';
 
-class WaitingIndicatorPage extends StatelessWidget {
-  WaitingIndicatorPage({super.key});
+class WaitingIndicator extends StatelessWidget {
+  WaitingIndicator({super.key});
 
-  final spinkit = SpinKitSquareCircle(
-    color: Color(0xff01D1B19),
-    size: 50.0,
+  final _spinkit = SpinKitRing(
+    color: ListOfColors.primaryBlack.withOpacity(0.8),
+    duration: Duration(milliseconds: 300),
+    lineWidth: 3,
+    size: 25.0,
   );
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: spinkit,
-      )
+    return Container(
+      child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: _spinkit,
+      ),
     );
   }
 }

@@ -4,16 +4,15 @@ import 'package:po_karmanu_project/pages/auth/authorization.dart';
 import 'package:po_karmanu_project/pages/auth/email_code.dart';
 import 'package:po_karmanu_project/pages/auth/registration_email.dart';
 import 'package:po_karmanu_project/pages/auth/registration_pass.dart';
+import 'package:po_karmanu_project/pages/content/noname.dart';
 import 'package:po_karmanu_project/pages/main/main_page.dart';
-import 'package:po_karmanu_project/waiting_page/wait_indicator.dart';
-
 class Routes {
   static String main = "/";
   static String auth = "/auth";
   static String reg = "/reg";
   static String regpass = "/regpass";
   static String code = "/code";
-  static String wait = "/wait";
+  static String noname = "/noname";
 }
 
 final pages = [
@@ -43,8 +42,7 @@ final pages = [
       curve: Curves.easeOutCirc,
       transitionDuration: Duration(milliseconds: 300)),
   GetPage(
-      name: Routes.wait,
-      page: () => WaitingIndicatorPage(),
-      transition: Transition.fadeIn,
-      transitionDuration: Duration(milliseconds: 50))
+      name: Routes.noname,
+      page: () => NoNamePage()
+  ),
 ];

@@ -13,7 +13,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
-      url: Constants.supabaseUrl, anonKey: Constants.supabaseAnnonKey);
+      url: Constants.supabaseUrl, anonKey: Constants.supabaseAnnonKey
+  );
 
   runApp(
     GetMaterialApp(

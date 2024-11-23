@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
+import 'package:po_karmanu_project/database/supabase.dart';
+import 'package:po_karmanu_project/pages/content/noname.dart';
+import 'package:po_karmanu_project/waiting_page/wait_indicator.dart';
 
 import '../../theme/theme.dart';
 
@@ -13,11 +17,13 @@ class AuthorizationPage extends StatefulWidget {
 
 class _AuthorizationPageState extends State<AuthorizationPage> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  TextEditingController _emailController = TextEditingController(), _passController = TextEditingController();
   late Animation<Offset> _offsetAnimationFirstImage;
   late Animation<Offset> _offsetAnimationSecondImage;
   late Animation<Offset> _offsetTextAnimation;
   final List<FocusNode> _focusNodes = [];
   final List<Color> _colors = [];
+  bool _waiting = false;
 
 
   @override
@@ -66,23 +72,27 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
   @override
   void dispose() {
     _controller.dispose();
+    _emailController.dispose();
+    _passController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
       backgroundColor: ListOfColors.primaryWhite,
       body: Stack(
         children: [
           Indexer(
             children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SingleChildScrollView(
-                  child: Indexed(
-                    index: 1,
+              if (_waiting)
+                Indexed(index: 2, child: WaitingIndicator()),
+
+              Indexed(
+                index: 1,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SingleChildScrollView(
                     child: SlideTransition(
                       position: _offsetTextAnimation,
                       child: Padding(
@@ -141,6 +151,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                             FocusScope.of(context).nextFocus();
                                           },
                                           focusNode: _focusNodes[0],
+                                          controller: _emailController,
                                           decoration: InputDecoration(
                                               icon: Icon(Icons.email_outlined, color: _colors[0]),
                                               hintText: 'Укажите почту',
@@ -171,6 +182,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                           },
                                           obscureText: true,
                                           focusNode: _focusNodes[1],
+                                          controller: _passController,
                                           decoration: InputDecoration(
                                               icon: Icon(Icons.lock_open_outlined, color: _colors[1]),
                                               hintText: 'Укажите пароль',
@@ -194,9 +206,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                             opacity: 0.7,
                                             child: Text(
                                               'Забыли пароль?',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .displaySmall,
+                                              style: Theme.of(context).textTheme.displaySmall,
                                             ),
                                           ),
                                         ),
@@ -239,14 +249,30 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                           minWidth: double.infinity,
                                           minHeight: 64),
                                       child: TextButton(
-                                          onPressed: () {
+                                          onPressed: () async{
                                             setState(() {
-                                              _controller.duration = const Duration(milliseconds: 300);
+                                              _waiting = true;
                                             });
-                                            _controller.reverse();
-                                            Future.delayed(const Duration(milliseconds: 300),
-                                                    () => Get.toNamed('/code',
-                                                    parameters: {'from': '/auth'}));
+                                            await SignInWithEmail(_emailController.text.trim(), _passController.text.trim()).then(
+                                                (value) {
+                                                  setState(() {
+                                                    _waiting = false;
+                                                  });
+                                                  if (value == true) {
+                                                    setState(() {
+                                                      _controller.duration = const Duration(milliseconds: 300);
+                                                    });
+                                                    _controller.reverse();
+                                                    Future.delayed(Duration(milliseconds: 300), () => Get.toNamed('noname', parameters: {'name': _emailController.text}));
+                                                  }
+                                                  else InAppNotifications.show(
+                                                      title: "Неудачная попытка авторизации",
+                                                      duration: Duration(seconds: 5),
+                                                      leading: Icon(Icons.error_outline, size: 32, color: Colors.red,),
+                                                      description: "Убедитесь в правильности ввода данных и повторите попытку авторизации"
+                                                  );
+                                                }
+                                            );
                                           },
                                           style: TextButtonTheme.of(context).style,
                                           child: Text(

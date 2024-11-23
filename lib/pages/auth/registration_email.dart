@@ -5,6 +5,7 @@ import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
 import 'package:po_karmanu_project/database/supabase.dart';
+import 'package:po_karmanu_project/waiting_page/wait_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../theme/theme.dart';
@@ -25,6 +26,9 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
   late Animation<Offset> _offsetTextAnimation;
   final List<FocusNode> _focusNodes = [];
   final List<Color> _colors = [];
+  bool _waiting = false;
+  var uid = null;
+  final supabase = Supabase.instance.client;
 
   @override
   void initState() {
@@ -71,6 +75,17 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
     super.initState();
   }
 
+  Future<bool> _createUser() async{
+    try {
+      await SignUpOptResponse(_emailController.text, '********');
+      return true;
+    }
+    catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -88,10 +103,12 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
         children: [
           Indexer(
             children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Indexed(
-                  index: 1,
+              if (_waiting)
+                Indexed(index: 2, child: WaitingIndicator()),
+              Indexed(
+                index: 1,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
                   child: SingleChildScrollView(
                     child: SlideTransition(
                       position: _offsetTextAnimation,
@@ -223,23 +240,28 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                           minWidth: double.infinity,
                                           minHeight: 64),
                                       child: TextButton(
-                                          onPressed: ()async{
-                                            if (_emailController.text.contains('@')) { // проверка
-                                              final response = await SignUpOptResponse(_emailController.text, '********');
+                                          onPressed: () async {
                                               setState(() {
                                                 _controller.duration = const Duration(milliseconds: 300);
+                                                _waiting = true;
                                               });
-                                              _controller.reverse();
-                                              Future.delayed(const Duration(milliseconds: 300), () => Get.toNamed('/code', parameters: {'from': '/reg', 'name': _nameController.text, 'email': _emailController.text}));
-                                            }
-                                            else {
-                                              InAppNotifications.show(
-                                                title: "Неверный формат почты",
-                                                duration: Duration(seconds: 5),
-                                                leading: Icon(Icons.error_outline, size: 32, color: Colors.red,),
-                                                description: "Убедитесь в правильности ввода и повторите попытку регистрации"
-                                              );
-                                            }
+                                              await _createUser().then((bool value) {
+                                                setState(() {
+                                                  _waiting = false;
+                                                });
+                                                if (value && _nameController.text.length > 0) {
+                                                  _controller.reverse();
+                                                  Future.delayed(const Duration(milliseconds: 300), () => Get.toNamed('/code', parameters: {'from': '/reg', 'name': _nameController.text, 'email': _emailController.text}));
+                                                }
+                                                else {
+                                                  InAppNotifications.show(
+                                                    title: "Неудачная попытка регистрации",
+                                                    duration: Duration(seconds: 5),
+                                                    leading: Icon(Icons.error_outline, size: 32, color: Colors.red,),
+                                                    description: "Убедитесь в правильности ввода данных и повторите попытку регистрации"
+                                                  );
+                                                }
+                                              });
                                           },
                                           style: TextButtonTheme.of(context).style,
                                           child: Text(
