@@ -3,11 +3,11 @@ import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
 import 'package:po_karmanu_project/database/supabase.dart';
-import 'package:po_karmanu_project/pages/content/noname.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../models/waiting_page/wait_indicator.dart';
 import '../../theme/theme.dart';
-import '../../waiting_page/wait_indicator.dart';
+final supabase = Supabase.instance.client;
 
 class RegistrationPagePassword extends StatefulWidget {
   const RegistrationPagePassword({super.key});
@@ -29,7 +29,8 @@ class _RegistrationPagePasswordState extends State<RegistrationPagePassword> wit
   final List<FocusNode> _focusNodes = [];
   final List<Color> _colors = [];
   bool _passHide = true;
-  final userId = Supabase.instance.client.auth.currentUser!.id;
+  final userId = supabase.auth.currentUser!.id;
+  final userCreatedAt = supabase.auth.currentUser!.createdAt;
   bool _waiting = false;
 
   @override
@@ -232,10 +233,11 @@ class _RegistrationPagePasswordState extends State<RegistrationPagePassword> wit
                                         });
                                         if (_isCorrectPassword()) {
                                           await UpdatePassword(_passwordController.text.trim());
+                                          await CreateUser(uid: userId, username: parameters['name']!, email: parameters['email']!, password: _passwordController.text, timeOfCreate: userCreatedAt);
                                           setState(() {
                                             _waiting = false;
                                           });
-                                          Get.toNamed('/noname', parameters: {'name': parameters['name']!});
+                                          Get.toNamed('/noname', parameters: {'id': userId});
                                         }
                                         else {
                                           InAppNotifications.show(

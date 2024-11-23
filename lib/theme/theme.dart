@@ -7,7 +7,6 @@ abstract class ListOfColors {
   static Color primaryGreen = Color(0xff669D4F);
 }
 
-
 final app_theme = ThemeData(
     fontFamily: 'GoogleFonts.montserrat().fontFamily',
     textTheme: TextTheme(
