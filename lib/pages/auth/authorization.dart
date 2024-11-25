@@ -3,9 +3,9 @@ import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
 import 'package:po_karmanu_project/database/supabase.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:po_karmanu_project/pages/auth/ForgotPassword.dart';
-import '../../models/waiting_page/wait_indicator.dart';
+import 'package:po_karmanu_project/pages/content/noname.dart';
+import 'package:po_karmanu_project/waiting_page/wait_indicator.dart';
+
 import '../../theme/theme.dart';
 
 class AuthorizationPage extends StatefulWidget {
@@ -197,25 +197,21 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                     const SizedBox(height: 15,),
 
                                     // ! Забыли пароль?
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                        backgroundColor: Colors.transparent, // Прозрачный фон
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => ForgotPassword()),
-                                        );
-                                      },
-                                      child: Text(
-                                        "Забыли пароль?",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {},
+                                          child: Opacity(
+                                            opacity: 0.7,
+                                            child: Text(
+                                              'Забыли пароль?',
+                                              style: Theme.of(context).textTheme.displaySmall,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-
                                     const SizedBox(height: 48,),
 
                                     // ! Соц сети
@@ -258,7 +254,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                               _waiting = true;
                                             });
                                             await SignInWithEmail(_emailController.text.trim(), _passController.text.trim()).then(
-                                                (value) async {
+                                                (value) {
                                                   setState(() {
                                                     _waiting = false;
                                                   });
@@ -267,11 +263,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                                       _controller.duration = const Duration(milliseconds: 300);
                                                     });
                                                     _controller.reverse();
-                                                    final userId = supabase.auth.currentUser!.id;
-                                                    final parameters = await supabase.from('users').select('*').eq('id', userId).single();
-                                                    final mapParameters = parameters.map((key, value) => MapEntry(key, value as String));
-
-                                                    Future.delayed(Duration(milliseconds: 300), () => Get.toNamed('noname', parameters: mapParameters));
+                                                    Future.delayed(Duration(milliseconds: 300), () => Get.toNamed('noname', parameters: {'name': _emailController.text}));
                                                   }
                                                   else InAppNotifications.show(
                                                       title: "Неудачная попытка авторизации",
