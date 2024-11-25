@@ -237,7 +237,7 @@ class _RegistrationPagePasswordState extends State<RegistrationPagePassword> wit
                                           setState(() {
                                             _waiting = false;
                                           });
-                                          Get.toNamed('/noname', parameters: {'id': userId});
+                                          Get.toNamed('/noname', parameters: {'id': userId, 'username': parameters['name']!});
                                         }
                                         else {
                                           InAppNotifications.show(
