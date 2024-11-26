@@ -8,36 +8,36 @@ abstract class ListOfColors {
 }
 
 final app_theme = ThemeData(
-    fontFamily: 'GoogleFonts.montserrat().fontFamily',
-    textTheme: TextTheme(
-        headlineLarge: TextStyle(
-            fontWeight: FontWeight.w900,
-            fontFamily: 'MontserrattAlternates',
-            color: Color(0xff01D1B19)
-        ),
-        headlineSmall: TextStyle(
-            fontWeight: FontWeight.normal,
-            fontFamily: 'MontserrattAlternates',
-            color: Color(0xff01D1B19),
-            fontSize: 16
-        ),
-        displaySmall: TextStyle(
+  fontFamily: 'GoogleFonts.montserrat().fontFamily',
+  textTheme: TextTheme(
+      headlineLarge: TextStyle(
+          fontWeight: FontWeight.w900,
+          fontFamily: 'MontserrattAlternates',
+          color: Color(0xff01D1B19)
+      ),
+      headlineSmall: TextStyle(
+          fontWeight: FontWeight.normal,
+          fontFamily: 'MontserrattAlternates',
+          color: Color(0xff01D1B19),
+          fontSize: 16
+      ),
+      displaySmall: TextStyle(
           fontWeight: FontWeight.normal,
           fontFamily: GoogleFonts.montserrat().fontFamily,
           color: Color(0xff01D1B19),
           fontSize: 16
-        )
-    ),
-    textButtonTheme: TextButtonThemeData(
+      )
+  ),
+  textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
         foregroundColor: WidgetStatePropertyAll(ListOfColors.primaryWhite),
         backgroundColor: WidgetStatePropertyAll(ListOfColors.primaryBlack),
         shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
 
-          )
+            )
         ),
       )
-    ),
+  ),
 );

@@ -31,8 +31,8 @@ Future CreateUser({required String uid, required String username, required Strin
 Future SignInWithEmail(String email, String password) async{
   try {
     await supabase.auth.signInWithPassword(
-      email: email,
-      password: password
+        email: email,
+        password: password
     );
     print('Успешная авторизация, пользователь найден');
     return true;

@@ -164,22 +164,22 @@ class _RegistrationPagePasswordState extends State<RegistrationPagePassword> wit
                                           borderRadius: BorderRadius.circular(16),
                                           border: Border.all(width: 1.5, color: _colors[0])),
                                       child: TextField(
-                                          onEditingComplete: (){
-                                            FocusScope.of(context).nextFocus();
-                                          },
-                                          obscureText: true,
-                                          focusNode: _focusNodes[0],
-                                          controller: _passwordController,
-                                          decoration: InputDecoration(
-                                              icon: Icon(Icons.lock_open_outlined,
-                                                  color: _colors[0]),
-                                              hintText: 'Укажите пароль',
-                                              border: InputBorder.none,
-                                              hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(color: ListOfColors.primaryBlack.withOpacity(0.25))),
-                                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                              fontSize: 18,
-                                              decorationThickness: 0
-                                          ),
+                                        onEditingComplete: (){
+                                          FocusScope.of(context).nextFocus();
+                                        },
+                                        obscureText: true,
+                                        focusNode: _focusNodes[0],
+                                        controller: _passwordController,
+                                        decoration: InputDecoration(
+                                            icon: Icon(Icons.lock_open_outlined,
+                                                color: _colors[0]),
+                                            hintText: 'Укажите пароль',
+                                            border: InputBorder.none,
+                                            hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(color: ListOfColors.primaryBlack.withOpacity(0.25))),
+                                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                            fontSize: 18,
+                                            decorationThickness: 0
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 15,),
@@ -196,22 +196,22 @@ class _RegistrationPagePasswordState extends State<RegistrationPagePassword> wit
                                           border: Border.all(width: 1.5,color: _colors[1])
                                       ),
                                       child: TextField(
-                                          onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                                          controller: _passwordControllerRepeat,
-                                          focusNode: _focusNodes[1],
-                                          obscureText: _passHide,
-                                          decoration: InputDecoration(
-                                              icon: Icon(Icons.lock_open_outlined, color: _colors[1]),
-                                              hintText: 'Повторите пароль',
-                                              border: InputBorder.none,
-                                              hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                                  color: ListOfColors.primaryBlack.withOpacity(0.25)
-                                              )
-                                          ),
-                                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                              fontSize: 18,
-                                              decorationThickness: 0
-                                          ),
+                                        onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                                        controller: _passwordControllerRepeat,
+                                        focusNode: _focusNodes[1],
+                                        obscureText: _passHide,
+                                        decoration: InputDecoration(
+                                            icon: Icon(Icons.lock_open_outlined, color: _colors[1]),
+                                            hintText: 'Повторите пароль',
+                                            border: InputBorder.none,
+                                            hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                                color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                            )
+                                        ),
+                                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                            fontSize: 18,
+                                            decorationThickness: 0
+                                        ),
                                       ),
                                     ),
                                   ],

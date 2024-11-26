@@ -3,9 +3,9 @@ import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
 import 'package:po_karmanu_project/database/supabase.dart';
-import 'package:po_karmanu_project/pages/content/noname.dart';
-import 'package:po_karmanu_project/waiting_page/wait_indicator.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../models/waiting_page/wait_indicator.dart';
 import '../../theme/theme.dart';
 
 class AuthorizationPage extends StatefulWidget {
@@ -108,8 +108,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                     .textTheme
                                     .headlineLarge!
                                     .copyWith(
-                                      fontSize: 32,
-                                    ),
+                                  fontSize: 32,
+                                ),
                               ),
                               const SizedBox(height: 8,),
                               ConstrainedBox(
@@ -147,21 +147,21 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                           borderRadius: BorderRadius.circular(16),
                                           border: Border.all(width: 1.5, color: _colors[0])),
                                       child: TextField(
-                                          onEditingComplete: (){
-                                            FocusScope.of(context).nextFocus();
-                                          },
-                                          focusNode: _focusNodes[0],
-                                          controller: _emailController,
-                                          decoration: InputDecoration(
-                                              icon: Icon(Icons.email_outlined, color: _colors[0]),
-                                              hintText: 'Укажите почту',
-                                              border: InputBorder.none,
-                                              hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                                      color: ListOfColors.primaryBlack.withOpacity(0.25))),
-                                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                              fontSize: 18,
-                                              decorationThickness: 0
-                                          ),
+                                        onEditingComplete: (){
+                                          FocusScope.of(context).nextFocus();
+                                        },
+                                        focusNode: _focusNodes[0],
+                                        controller: _emailController,
+                                        decoration: InputDecoration(
+                                            icon: Icon(Icons.email_outlined, color: _colors[0]),
+                                            hintText: 'Укажите почту',
+                                            border: InputBorder.none,
+                                            hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                                color: ListOfColors.primaryBlack.withOpacity(0.25))),
+                                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                            fontSize: 18,
+                                            decorationThickness: 0
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 15,),
@@ -177,21 +177,21 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                           borderRadius: BorderRadius.circular(16),
                                           border: Border.all(width: 1.5, color: _colors[1])),
                                       child: TextField(
-                                          onEditingComplete: (){
-                                            FocusScope.of(context).nextFocus();
-                                          },
-                                          obscureText: true,
-                                          focusNode: _focusNodes[1],
-                                          controller: _passController,
-                                          decoration: InputDecoration(
-                                              icon: Icon(Icons.lock_open_outlined, color: _colors[1]),
-                                              hintText: 'Укажите пароль',
-                                              border: InputBorder.none,
-                                              hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(color: ListOfColors.primaryBlack.withOpacity(0.25))),
-                                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                              fontSize: 18,
-                                              decorationThickness: 0
-                                          ),
+                                        onEditingComplete: (){
+                                          FocusScope.of(context).nextFocus();
+                                        },
+                                        obscureText: true,
+                                        focusNode: _focusNodes[1],
+                                        controller: _passController,
+                                        decoration: InputDecoration(
+                                            icon: Icon(Icons.lock_open_outlined, color: _colors[1]),
+                                            hintText: 'Укажите пароль',
+                                            border: InputBorder.none,
+                                            hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(color: ListOfColors.primaryBlack.withOpacity(0.25))),
+                                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                            fontSize: 18,
+                                            decorationThickness: 0
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 15,),
@@ -254,7 +254,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                               _waiting = true;
                                             });
                                             await SignInWithEmail(_emailController.text.trim(), _passController.text.trim()).then(
-                                                (value) {
+                                                    (value) async {
                                                   setState(() {
                                                     _waiting = false;
                                                   });
@@ -263,7 +263,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                                       _controller.duration = const Duration(milliseconds: 300);
                                                     });
                                                     _controller.reverse();
-                                                    Future.delayed(Duration(milliseconds: 300), () => Get.toNamed('noname', parameters: {'name': _emailController.text}));
+                                                    final userId = supabase.auth.currentUser!.id;
+                                                    final parameters = await supabase.from('users').select('*').eq('id', userId).single();
+                                                    final mapParameters = parameters.map((key, value) => MapEntry(key, value as String));
+
+                                                    Future.delayed(Duration(milliseconds: 300), () => Get.toNamed('noname', parameters: mapParameters));
                                                   }
                                                   else InAppNotifications.show(
                                                       title: "Неудачная попытка авторизации",

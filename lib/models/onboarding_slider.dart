@@ -25,8 +25,8 @@ class _SliderPageState extends State<SliderPage> {
           height: 8,
           width: currentIndex == 0 ? 14 : 8,
           decoration: BoxDecoration(
-            color: currentIndex == 0 ? ListOfColors.primaryBlack : ListOfColors.primaryBlack.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(12)
+              color: currentIndex == 0 ? ListOfColors.primaryBlack : ListOfColors.primaryBlack.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12)
           ),
         ),
         const SizedBox(width: 8,),

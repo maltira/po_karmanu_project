@@ -33,9 +33,9 @@ class CarouselItem extends StatelessWidget {
                         Text(
                           title,
                           style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                              fontSize: 22,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
+                            fontSize: 22,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 4,),

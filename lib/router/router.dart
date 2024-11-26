@@ -18,8 +18,8 @@ class Routes {
 
 final pages = [
   GetPage(
-      name: Routes.main,
-      page: () => MainPage(),
+    name: Routes.main,
+    page: () => MainPage(),
   ),
   GetPage(
       name: Routes.auth,

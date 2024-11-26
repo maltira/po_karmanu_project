@@ -127,26 +127,26 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
 
                       // Назад
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 28),
-                        child: GestureDetector(
-                          onTap: () async{
-                            setState((){
-                              _controller.duration = const Duration(milliseconds: 300);
-                            });
-                            _controller.reverse();
-                            Future.delayed(const Duration(milliseconds: 300), () => Get.offAndToNamed(parameters['from']!));
-                          },
-                          child: Row(
-                            children: [
-                              const Icon(Icons.arrow_back_ios_new),
-                              const SizedBox(width: 12,),
-                              Text(
-                                'Назад',
-                                style: Theme.of(context).textTheme.displaySmall,
-                              )
-                            ],
-                          ),
-                        )
+                          margin: const EdgeInsets.symmetric(horizontal: 28),
+                          child: GestureDetector(
+                            onTap: () async{
+                              setState((){
+                                _controller.duration = const Duration(milliseconds: 300);
+                              });
+                              _controller.reverse();
+                              Future.delayed(const Duration(milliseconds: 300), () => Get.offAndToNamed(parameters['from']!));
+                            },
+                            child: Row(
+                              children: [
+                                const Icon(Icons.arrow_back_ios_new),
+                                const SizedBox(width: 12,),
+                                Text(
+                                  'Назад',
+                                  style: Theme.of(context).textTheme.displaySmall,
+                                )
+                              ],
+                            ),
+                          )
                       ),
 
                       // Заголовок
@@ -189,9 +189,9 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                       height: 52,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                        color: ListOfColors.primaryBlack.withOpacity(0.03),
-                                        borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(width: 1.5, color: _colors[0])
+                                          color: ListOfColors.primaryBlack.withOpacity(0.03),
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(width: 1.5, color: _colors[0])
                                       ),
                                       child: TextFormField(
                                         onChanged: (value){
@@ -210,16 +210,16 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
                                         decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: code[0],
-                                          hintStyle: TextStyle(
-                                              color: ListOfColors.primaryBlack.withOpacity(0.25)
-                                          ),
-                                          focusColor: ListOfColors.primaryBlack
+                                            border: InputBorder.none,
+                                            hintText: code[0],
+                                            hintStyle: TextStyle(
+                                                color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                            ),
+                                            focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold
                                         ),
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(1),
@@ -262,8 +262,8 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                             focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold
                                         ),
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(1),
@@ -306,8 +306,8 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                             focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold
                                         ),
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(1),
@@ -436,12 +436,12 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                                 _controller.reverse();
                                                 Future.delayed(
                                                     const Duration(milliseconds: 300), () =>
-                                                        Get.toNamed('/regpass',
-                                                            parameters: {
-                                                              'from': parameters['from']!,
-                                                              'name': parameters['name']!,
-                                                              'email': parameters['email']!
-                                                            }));
+                                                    Get.toNamed('/regpass',
+                                                        parameters: {
+                                                          'from': parameters['from']!,
+                                                          'name': parameters['name']!,
+                                                          'email': parameters['email']!
+                                                        }));
                                               }
                                               else InAppNotifications.show(
                                                   title: "Неверный OTP код",
@@ -462,13 +462,13 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                             border: InputBorder.none,
                                             hintText: code[5],
                                             hintStyle: TextStyle(
-                                              color: ListOfColors.primaryBlack.withOpacity(0.25)
+                                                color: ListOfColors.primaryBlack.withOpacity(0.25)
                                             ),
                                             focusColor: ListOfColors.primaryBlack
                                         ),
                                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold
                                         ),
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(1),
@@ -496,10 +496,10 @@ class _EmailCodeState extends State<EmailCode> with SingleTickerProviderStateMix
                                       Future.delayed(
                                           const Duration(milliseconds: 300),
                                               () => Get.toNamed('/regpass', parameters: {
-                                                    'from': parameters['from']!,
-                                                    'name': parameters['name']!,
-                                                    'email': parameters['email']!
-                                                  }));
+                                            'from': parameters['from']!,
+                                            'name': parameters['name']!,
+                                            'email': parameters['email']!
+                                          }));
                                     }
                                     else InAppNotifications.show(
                                         title: "Неверный OTP код",

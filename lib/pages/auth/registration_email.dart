@@ -122,8 +122,8 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                 'Регистрация',
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                      fontSize: 32,
-                                    ),
+                                  fontSize: 32,
+                                ),
                               ),
                               const SizedBox(height: 8,),
                               Opacity(
@@ -132,7 +132,7 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                   'Создайте новый аккаунт',
                                   textAlign: TextAlign.center,
                                   style:
-                                      Theme.of(context).textTheme.headlineSmall,
+                                  Theme.of(context).textTheme.headlineSmall,
                                 ),
                               ),
                               const SizedBox(height: 48,),
@@ -165,8 +165,8 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                                 color: const Color(0xff01d1b19).withOpacity(0.25))
                                         ),
                                         style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                          fontSize: 18,
-                                          decorationThickness: 0
+                                            fontSize: 18,
+                                            decorationThickness: 0
                                         ),
                                         focusNode: _focusNodes[0],
                                         controller: _nameController,
@@ -184,21 +184,21 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                           borderRadius: BorderRadius.circular(16),
                                           border: Border.all(width: 1.5, color: _colors[1])),
                                       child: TextField(
-                                          onEditingComplete: (){
-                                            FocusScope.of(context).nextFocus();
-                                          },
-                                          decoration: InputDecoration(
-                                              icon: Icon(Icons.email_outlined, color: _colors[1]),
-                                              hintText: 'Укажите почту',
-                                              border: InputBorder.none,
-                                              hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                                  color: ListOfColors.primaryBlack.withOpacity(0.25))),
-                                          focusNode: _focusNodes[1],
-                                          style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                              fontSize: 18,
-                                              decorationThickness: 0
-                                          ),
-                                          controller: _emailController,
+                                        onEditingComplete: (){
+                                          FocusScope.of(context).nextFocus();
+                                        },
+                                        decoration: InputDecoration(
+                                            icon: Icon(Icons.email_outlined, color: _colors[1]),
+                                            hintText: 'Укажите почту',
+                                            border: InputBorder.none,
+                                            hintStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                                color: ListOfColors.primaryBlack.withOpacity(0.25))),
+                                        focusNode: _focusNodes[1],
+                                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                            fontSize: 18,
+                                            decorationThickness: 0
+                                        ),
+                                        controller: _emailController,
 
                                       ),
                                     ),
@@ -241,27 +241,27 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                           minHeight: 64),
                                       child: TextButton(
                                           onPressed: () async {
+                                            setState(() {
+                                              _controller.duration = const Duration(milliseconds: 300);
+                                              _waiting = true;
+                                            });
+                                            await _createUser().then((bool value) {
                                               setState(() {
-                                                _controller.duration = const Duration(milliseconds: 300);
-                                                _waiting = true;
+                                                _waiting = false;
                                               });
-                                              await _createUser().then((bool value) {
-                                                setState(() {
-                                                  _waiting = false;
-                                                });
-                                                if (value && _nameController.text.length > 0) {
-                                                  _controller.reverse();
-                                                  Future.delayed(const Duration(milliseconds: 300), () => Get.toNamed('/code', parameters: {'from': '/reg', 'name': _nameController.text, 'email': _emailController.text}));
-                                                }
-                                                else {
-                                                  InAppNotifications.show(
+                                              if (value && _nameController.text.length > 0) {
+                                                _controller.reverse();
+                                                Future.delayed(const Duration(milliseconds: 300), () => Get.toNamed('/code', parameters: {'from': '/reg', 'name': _nameController.text, 'email': _emailController.text}));
+                                              }
+                                              else {
+                                                InAppNotifications.show(
                                                     title: "Неудачная попытка регистрации",
                                                     duration: Duration(seconds: 5),
                                                     leading: Icon(Icons.error_outline, size: 32, color: Colors.red,),
                                                     description: "Убедитесь в правильности ввода данных и повторите попытку регистрации"
-                                                  );
-                                                }
-                                              });
+                                                );
+                                              }
+                                            });
                                           },
                                           style: TextButtonTheme.of(context).style,
                                           child: Text(
@@ -283,7 +283,7 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                               _controller.reverse();
                                               Future.delayed(
                                                   const Duration(milliseconds: 300),
-                                                  () => Get.offAndToNamed('/auth'));
+                                                      () => Get.offAndToNamed('/auth'));
                                             });
                                           },
                                           style: ButtonStyle(
@@ -293,8 +293,8 @@ class _RegistrationPageState extends State<RegistrationPage> with SingleTickerPr
                                           child: Text(
                                             'У меня есть аккаунт',
                                             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                letterSpacing: 0.5,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 0.5,
                                             ),
                                           )),
                                     ),
