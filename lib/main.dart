@@ -6,21 +6,20 @@ import 'package:po_karmanu_project/theme/theme.dart';
 import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-// ! comment
-// * comment
-// ? comment
+import 'database/supabase.dart';
 
-Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  await WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
       url: Constants.supabaseUrl, anonKey: Constants.supabaseAnnonKey
   );
+  await requestRecipeData();
 
   runApp(
     GetMaterialApp(
       builder: InAppNotifications.init(),
       theme: app_theme,
-      initialRoute: '/',
+      initialRoute: '/mainhome',
       getPages: pages,
     )
   );

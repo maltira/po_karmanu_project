@@ -267,7 +267,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> with SingleTicker
                                                     final parameters = await supabase.from('users').select('*').eq('id', userId).single();
                                                     final mapParameters = parameters.map((key, value) => MapEntry(key, value as String));
 
-                                                    Future.delayed(Duration(milliseconds: 300), () => Get.toNamed('noname', parameters: mapParameters));
+                                                    Future.delayed(Duration(milliseconds: 300), () => Get.offAndToNamed('mainhome', parameters: mapParameters));
                                                   }
                                                   else InAppNotifications.show(
                                                       title: "Неудачная попытка авторизации",

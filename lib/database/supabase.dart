@@ -3,6 +3,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
 
+// Список рецептов
+late final List recipes;
+Future requestRecipeData() async{
+  recipes = await supabase.from('recipe_data').select('*');
+}
+List get getRecipeList => recipes;
+
+
 Future SignUpOptResponse(String email, String password) async {
   final response = await supabase.auth.signUp(
       email: email,
@@ -62,3 +70,4 @@ Future UpdatePassword(String newPass) async {
       )
   );
 }
+

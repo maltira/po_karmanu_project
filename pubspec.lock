@@ -142,6 +142,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  flutter_rating_native:
+    dependency: "direct main"
+    description:
+      name: flutter_rating_native
+      sha256: d7bdab9645b78f22fc2d96b5b93ac40bc26749ad863fdf3b5194a32f82b69c4d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -485,6 +493,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
+  sticky_headers:
+    dependency: "direct main"
+    description:
+      name: sticky_headers
+      sha256: "9b3dd2cb0fd6a7038170af3261f855660cbb241cb56c501452cb8deed7023ede"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0+2"
   storage_client:
     dependency: transitive
     description:
